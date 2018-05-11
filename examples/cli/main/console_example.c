@@ -279,7 +279,13 @@ static void cli_setup_player(void)
         .resample_rate = 0,
         .hal = NULL,
     };
+#ifdef CONFIG_AUDIO_KIT
+    audio_hal_codec_config_t audio_hal_codec_cfg =  AUDIO_HAL_AC101_DEFAULT();
+#endif
+
+#ifdef CONFIG_ESP32_LYRAT
     audio_hal_codec_config_t audio_hal_codec_cfg =  AUDIO_HAL_ES8388_DEFAULT();
+#endif
     cfg.hal = audio_hal_init(&audio_hal_codec_cfg, 0);
     cfg.evt_que = xQueueCreate(3, sizeof(esp_audio_state_t));
     audio_hal_ctrl_codec(cfg.hal, AUDIO_HAL_CODEC_MODE_DECODE, AUDIO_HAL_CTRL_START);

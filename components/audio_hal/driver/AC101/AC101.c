@@ -107,7 +107,7 @@ esp_err_t AC101_init(audio_hal_codec_config_t* codec_cfg) {
 	res |= AC101_Write_Reg(SYSCLK_CTRL, 0x8b08);
 	res |= AC101_Write_Reg(MOD_CLK_ENA, 0x800c);
 	res |= AC101_Write_Reg(MOD_RST_CTRL, 0x800c);
-	res |= AC101_Write_Reg(I2S_SR_CTRL, 0x7000);			//sample rate
+	res |= AC101_Write_Reg(I2S_SR_CTRL, 0x3000);			//sample rate
 	//AIF config
 	res |= AC101_Write_Reg(I2S1LCK_CTRL, 0x8850);			//BCLK/LRCK
 	res |= AC101_Write_Reg(I2S1_SDOUT_CTRL, 0xc000);		//
@@ -200,17 +200,15 @@ esp_err_t AC101_start(ac_module_t mode)
     if (mode == AC_MODULE_LINE) {
     }
     if (mode == AC_MODULE_ADC || mode == AC_MODULE_ADC_DAC || mode == AC_MODULE_LINE) {
-    	res |= AC101_Write_Reg(ADC_SRCBST_CTRL, 0xc444);		//erji mic1
-    	res |= AC101_Write_Reg(ADC_APC_CTRL, 0x33c0);
-    	res |= AC101_Write_Reg(OMIXER_SR, 0x2040);
-    	res |= AC101_Write_Reg(OMIXER_DACA_CTRL, 0x3080);
+    	res |= AC101_Write_Reg(0x02, 0x8600);		//erji mic1
+    	res |= AC101_Write_Reg(0x04, 0x8008);
+    	res |= AC101_Write_Reg(0x05, 0x8008);
+		res |= AC101_Write_Reg(0x06, 0x3000);
+		//res |= AC101_Write_Reg(I2S1_SDOUT_CTRL, 0xf000)
     }
     if (mode == AC_MODULE_DAC || mode == AC_MODULE_ADC_DAC || mode == AC_MODULE_LINE) {
     	//* Enable Headphoe output   注意使用耳机时，最后开以下寄存器
     	res |= AC101_Write_Reg(OMIXER_DACA_CTRL, 0xff80);	//out hp & spk
-//    	res |= AC101_Write_Reg(HPOUT_CTRL, 0xc3c1);
-//    	res |= AC101_Write_Reg(HPOUT_CTRL, 0xcb00);
-//    	vTaskDelay(100 / portTICK_PERIOD_MS);
     	res |= AC101_Write_Reg(HPOUT_CTRL, 0xF8C0);
     	//* Enable Speaker output
     	res |= AC101_Write_Reg(SPKOUT_CTRL, 0xeabd);
@@ -371,7 +369,7 @@ esp_err_t AC101_i2s_config_clock(ac_i2s_clock_t *cfg)
 esp_err_t AC101_set_voice_volume(int volume)
 {
 	esp_err_t res;
-	res = ac101_set_spk_volume(volume);
+	res = ac101_set_earph_volume(volume);
 	res |= ac101_set_spk_volume(volume);
 	return res;
 }

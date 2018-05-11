@@ -93,7 +93,12 @@ void app_main(void)
     audio_element_handle_t http_stream_reader, i2s_stream_writer, mp3_decoder;
 
     ESP_LOGI(TAG, "[ 1 ] Start audio codec chip");
+#ifdef CONFIG_AUDIO_KIT
+    audio_hal_codec_config_t audio_hal_codec_cfg =  AUDIO_HAL_AC101_DEFAULT();
+#endif
+#ifdef CONFIG_ESP32_LYRAT
     audio_hal_codec_config_t audio_hal_codec_cfg =  AUDIO_HAL_ES8388_DEFAULT();
+#endif
     audio_hal_handle_t hal = audio_hal_init(&audio_hal_codec_cfg, 0);
     audio_hal_ctrl_codec(hal, AUDIO_HAL_CODEC_MODE_DECODE, AUDIO_HAL_CTRL_START);
 
