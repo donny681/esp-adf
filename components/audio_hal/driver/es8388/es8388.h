@@ -23,9 +23,8 @@
  */
 
 #ifndef __ES8388_H__
+#define __ES8388_H__
 
-#include "sdkconfig.h"
-#ifdef CONFIG_ESP32_LYRAT
 #include "esp_types.h"
 #include "audio_hal.h"
 #include "driver/i2c.h"
@@ -135,6 +134,9 @@ typedef enum {
     MCLK_DIV_30 = 26,
     MCLK_DIV_32 = 27,
     MCLK_DIV_34 = 28,
+    MCLK_DIV_7  = 29,
+    MCLK_DIV_13 = 30,
+    MCLK_DIV_14 = 31,
     MCLK_DIV_MAX,
 } es_sclk_div_t;
 
@@ -170,8 +172,17 @@ typedef enum {
 } es_lclk_div_t;
 
 typedef enum {
+    D2SE_PGA_GAIN_MIN = -1,
+    D2SE_PGA_GAIN_DIS = 0,
+    D2SE_PGA_GAIN_EN = 1,
+    D2SE_PGA_GAIN_MAX =2,
+} es_d2se_pga_t;
+
+typedef enum {
     ADC_INPUT_MIN = -1,
     ADC_INPUT_LINPUT1_RINPUT1 = 0x00,
+    ADC_INPUT_MIC1  = 0x05,
+    ADC_INPUT_MIC2  = 0x06,
     ADC_INPUT_LINPUT2_RINPUT2 = 0x50,
     ADC_INPUT_DIFFERENCE = 0xf0,
     ADC_INPUT_MAX,
@@ -181,6 +192,7 @@ typedef enum {
     DAC_OUTPUT_MIN = -1,
     DAC_OUTPUT_LOUT1 = 0x04,
     DAC_OUTPUT_LOUT2 = 0x08,
+    DAC_OUTPUT_SPK   = 0x09,
     DAC_OUTPUT_ROUT1 = 0x10,
     DAC_OUTPUT_ROUT2 = 0x20,
     DAC_OUTPUT_ALL = 0x3c,
@@ -440,5 +452,5 @@ esp_err_t es8388_ctrl_state(audio_hal_codec_mode_t mode, audio_hal_ctrl_t ctrl_s
  *     - void
  */
 void es8388_pa_power(bool enable);
-#endif
+
 #endif //__ES8388_H__
